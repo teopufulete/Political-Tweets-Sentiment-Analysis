@@ -1,48 +1,67 @@
 import tweepy
 import csv
-import panda as pd
 import os
 import json
+import re
+import pandas as pd
 
-access_token = "ENTER YOUR ACCESS TOKEN"
-access_token_secret = "ENTER YOUR ACCESS TOKEN SECRET"
-consumer_key = "ENTER YOUR API KEY"
-consumer_secret = "ENTER YOUR API SECRET"
+
+access_token = ""
+access_token_secret = ""
+consumer_key = ""
+consumer_secret = ""
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-general_2020election_tweets = "...data/2020election_data.csv"
-trump_tweets = "...data/trump_data.csv"
-warren_tweets = "...data/warren_data.csv"
+general_2020election_tweets = "data/2020election_data.csv"
+trump_tweets = "data/trump_data.csv"
+warren_tweets = "data/warren_data.csv"
 
-COLS = ['id', 'created_at','original_text','clean_text', 'sentiment', 'favorite_count', 'retweet_count', 'possibly_sensitive', 'hashtags',
-'user_mentions', 'place']
-
-emoji_pattern = re.compile("["
-         u"\U0001F600-\U0001F64F"  # emoticons
-         u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-         u"\U0001F680-\U0001F6FF"  # transport & map symbols
-         u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-         u"\U00002702-\U000027B0"
-         u"\U000024C2-\U0001F251"
-         "]+", flags=re.UNICODE)
+COLS = ['id', 'created_at','favorite_count', 'retweet_count', 'hashtags', 'place']
 
 def write_tweets(keyword, file):
     
-    if os.path.exists(file):
-        df = pd.read_csv(file, header=0)
-    else:
-        df = pd.DataFrame(columns=COLS)
-    
-    for page in tweepy.Cursor(api.search, q=keyword,
-                              count=200, include_rts=False, lang="en", since="2017-04-03").items()
-    
-    for status in page:
-        new_entry = []
-        status = status._json
-        
-      
-    
+    # if os.path.exists(file):
+    #     df = pd.read_csv(file, header=0)
+    # else:
+    # df = pd.DataFrame(columns = COLS)
+    all_entries = []
+    for page in tweepy.Cursor(api.search, q=keyword,count=3, include_rts=False).pages(3):
+        for status in page:
+            new_entry = None
+            status = status._json
 
+            if status['lang'] != 'en':
+                continue
+            
+
+            # if status['created_at'] in df['created_at'].values:
+            #     i = df.loc[df['created_at'] == status['created_at']].index[0]
+            #     if status['favorite_count'] != df.at[i, 'favorite_count'] or \
+            #         status['retweet_count'] != df.at[i, 'retweet_count']:
+            #          df.at[i, 'favorite_count'] = status['favorite_count']
+            #          df.at[i, 'retweet_count'] = status['retweet_count']
+            #     continue
+ 
+            new_entry = [status['id'], status['created_at'],
+                        status['source'], status['text'], 
+                        status['favorite_count'], status['retweet_count']]
+            # print(new_entry[3])
+
+            all_entries.append(new_entry)
+    # print(all_entries)
+    # csvFile = open(file, 'a' ,encoding='utf-8')
+    # df.to_csv(csvFile, mode='a', columns=COLS, index=False, encoding="utf-8")
+    with open(file, 'a' ,encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(COLS)
+        print(all_entries)
+        writer.writerows(all_entries)
+
+
+trump_keywords = '#trump OR #donaldtrump'
+election_keywords = '#2020election'
+write_tweets(trump_keywords, trump_tweets)
+write_tweets(election_keywords, general_2020election_tweets )
