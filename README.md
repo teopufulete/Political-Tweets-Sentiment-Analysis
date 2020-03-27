@@ -2,8 +2,8 @@
 
 Aiming to predict the 2020 US presidential election results using sentiment analysis
 
-#1. Architecture choices:
-#####Bidirectional LSTM - to determine polarity of a tweet
+1. Architecture choices:
+  *Bidirectional LSTM - to determine polarity of a tweet
        * Bayesian inference - to analyze LSTM output and make predictions
 
 *Techonoloes used:
