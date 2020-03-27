@@ -5,7 +5,7 @@
  
  - Architecture choices:
       * Bidirectional LSTM - to determine polarity of a tweet
-       * Bayesian inference - to analyze LSTM output and make predictions
+      * Bayesian inference - to analyze LSTM output and make predictions
      
  - Technologies used:
 	 1. Data collection:
