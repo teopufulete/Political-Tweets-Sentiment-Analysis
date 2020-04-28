@@ -20,3 +20,4 @@
 	   * Numpy - handling high-dimensional mathematical operations
 	   * sklearn - feature extraction and word embedding
 	   * Keras - testing different architectures, picked Bidirectional LSTM after comparing accuracy of different models
+	   * pymc3 - Bayesian Inference with NUTS sampler
