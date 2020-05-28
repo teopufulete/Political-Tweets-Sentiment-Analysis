@@ -1,7 +1,7 @@
 # Political-Tweets-Sentiment-Analysis
 
 
-#### Aiming to predict the 2020 US presidential election results using sentiment analysis.
+#### B.Sc Dissertation: Investigating the role of emotions and cognitive biases in political decision making through sentiment analysis of Twitter data using ML
  
  - Architecture choices:
       * Bidirectional LSTM - to determine polarity of a tweet
